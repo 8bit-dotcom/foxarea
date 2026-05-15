@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tournament {
+  id                   String          @id @default(cuid())
+  name                 String
+  description          String?
+  status               String          @default("upcoming")
+  mode                 String          @default("battle_royale") // battle_royale or clash_squad
+  maxTeams             Int             @default(12)
+  matchCount           Int             @default(6)
+  placementPointsJson  String          @default("{\"1\":12,\"2\":9,\"3\":8,\"4\":7,\"5\":6,\"6\":5,\"7\":4,\"8\":3,\"9\":2,\"10\":1,\"11\":0,\"12\":0}")
+  killPointValue       Int             @default(1)
+  allowRegistration    Boolean         @default(false)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  teams                Team[]
+  matches              Match[]
+  chatMessages         ChatMessage[]
+  bracketMatches       BracketMatch[]
+  votes                Vote[]
+  achievements         Achievement[]
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  name        String
+  tag         String
+  nickname    String       @default("")
+  tournamentId String
+  tournament  Tournament   @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  results     MatchResult[]
+  bracketAsTeam1 BracketMatch[] @relation("BracketTeam1")
+  bracketAsTeam2 BracketMatch[] @relation("BracketTeam2")
+  bracketWins    BracketMatch[] @relation("BracketWinner")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([tournamentId, tag])
+}
+
+model Match {
+  id          String     @id @default(cuid())
+  tournamentId String
+  matchNumber Int
+  tournament  Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  results     MatchResult[]
+  status      String     @default("upcoming")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([tournamentId, matchNumber])
+}
+
+model MatchResult {
+  id              String   @id @default(cuid())
+  matchId         String
+  teamId          String
+  placement       Int
+  kills           Int      @default(0)
+  placementPoints Int      @default(0)
+  killPoints      Int      @default(0)
+  totalPoints     Int      @default(0)
+  match           Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  team            Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, teamId])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chatMessages ChatMessage[]
+  auditLogs    AuditLog[]
+  achievements Achievement[]
+}
+
+model ChatMessage {
+  id           String     @id @default(cuid())
+  tournamentId String
+  userId       String
+  message      String
+  createdAt    DateTime   @default(now())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SiteSettings {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model TournamentTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  config      String   // JSON string of tournament config
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BracketMatch {
+  id             String     @id @default(cuid())
+  tournamentId   String
+  round          Int        // 1=QF, 2=SF, 3=Final
+  position       Int        // match position within the round (1,2,3,4 for QF; 1,2 for SF; 1 for Final)
+  team1Id        String?
+  team2Id        String?
+  winnerId       String?
+  score1         Int        @default(0) // score/rounds won by team1
+  score2         Int        @default(0) // score/rounds won by team2
+  status         String     @default("upcoming") // upcoming, ongoing, completed
+  nextMatchId    String?    // link to next bracket match (winner advances)
+  nextMatchSlot  Int?       // 1=team1 of next match, 2=team2 of next match
+  tournament     Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  team1          Team?      @relation("BracketTeam1", fields: [team1Id], references: [id], onDelete: SetNull)
+  team2          Team?      @relation("BracketTeam2", fields: [team2Id], references: [id], onDelete: SetNull)
+  winner         Team?      @relation("BracketWinner", fields: [winnerId], references: [id], onDelete: SetNull)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Vote {
+  id           String   @id @default(cuid())
+  tournamentId String
+  teamId       String
+  voterFingerprint String // browser fingerprint or userId for dedup
+  createdAt    DateTime @default(now())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, voterFingerprint])
+}
+
+model Achievement {
+  id           String   @id @default(cuid())
+  userId       String?
+  tournamentId String
+  type         String   // hosted_5, managed_50_teams, etc
+  label        String
+  icon         String   @default("🏆")
+  createdAt    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, type])
+}
