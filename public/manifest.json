@@ -1,0 +1,21 @@
+{
+  "name": "FoxArea Tournament",
+  "short_name": "FoxArea",
+  "description": "Free Fire Tournament Point Calculator",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#F97316",
+  "icons": [
+    {
+      "src": "/logo-foxarea.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "/foxarea-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

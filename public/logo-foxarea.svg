@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left ear — elegant -->
+  <path d="M115 195 L168 65 L225 185 Z" fill="#1F2937" />
+  <!-- Right ear -->
+  <path d="M397 195 L344 65 L287 185 Z" fill="#1F2937" />
+  <!-- Inner left ear — brand accent -->
+  <path d="M140 182 L170 100 L205 175 Z" fill="#F97316" />
+  <!-- Inner right ear -->
+  <path d="M372 182 L342 100 L307 175 Z" fill="#F97316" />
+  <!-- Head — dark charcoal -->
+  <path d="M85 215 L165 185 L256 205 L347 185 L427 215 L405 345 L256 405 L107 345 Z" fill="#1F2937" />
+  <!-- Forehead diamond — brand accent -->
+  <path d="M256 195 L288 242 L256 289 L224 242 Z" fill="#F97316" />
+  <!-- Left eye — white diamond -->
+  <path d="M160 242 L198 228 L212 252 L198 272 L168 267 Z" fill="#F9FAFB" />
+  <path d="M183 244 L198 239 L204 252 L196 260 L181 256 Z" fill="#F97316" />
+  <!-- Right eye -->
+  <path d="M352 242 L314 228 L300 252 L314 272 L344 267 Z" fill="#F9FAFB" />
+  <path d="M329 244 L314 239 L308 252 L316 260 L331 256 Z" fill="#F97316" />
+  <!-- Snout — lighter charcoal -->
+  <path d="M205 292 L256 312 L307 292 L295 342 L256 362 L217 342 Z" fill="#374151" />
+  <!-- Nose -->
+  <path d="M244 337 L256 327 L268 337 L261 347 L251 347 Z" fill="#111827" />
+  <!-- Left fang — brand orange -->
+  <path d="M220 347 L228 372 L238 347 Z" fill="#F97316" />
+  <!-- Right fang -->
+  <path d="M274 347 L282 372 L292 347 Z" fill="#F97316" />
+  <!-- Left cheek stripe — subtle -->
+  <path d="M105 235 L142 225 L147 258 L114 263 Z" fill="#374151" />
+  <!-- Right cheek stripe -->
+  <path d="M407 235 L370 225 L365 258 L398 263 Z" fill="#374151" />
+  <!-- Left jaw accent — brand -->
+  <path d="M107 345 L138 315 L163 345 L145 368 Z" fill="#F97316" />
+  <!-- Right jaw accent -->
+  <path d="M405 345 L374 315 L349 345 L367 368 Z" fill="#F97316" />
+</svg>
